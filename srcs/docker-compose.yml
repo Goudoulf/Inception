@@ -55,16 +55,30 @@ services:
 
   adminer:
     build:
-      context: requirements/bonus/adminer/.
+      context: bonus/adminer/.
       dockerfile: Dockerfile
     image: "inception-adminer:adminer"
     container_name: adminer
     restart: always
+    ports:
+      - "8080:8080"
     depends_on:
       - mariadb
     networks:
       - inception-network
-
+ftpserver:
+    build: bonus/ftpserver/.
+    container_name: ftpserver
+    image: "inception-ftpserver:ftpserver"
+    restart: always
+    ports:
+      - "21:21"
+      - "21000-21010:21000-21010"
+    depends_on:
+      - wordpress
+    volumes:
+      - /home/cassie/data/wordpress:/var/www/html
+    
 networks:
   inception-network:
 
