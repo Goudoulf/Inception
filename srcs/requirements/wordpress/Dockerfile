@@ -27,3 +27,6 @@ COPY ./tools/wp-launch.sh .
 RUN chmod +x wp-launch.sh
 
 ENTRYPOINT ["./wp-launch.sh"]
+CMD ["php-fpm8.2", "-F"]
+
+

@@ -8,3 +8,4 @@ COPY ./conf/50-server.cnf /etc/mysql/mariadb.conf.d/
 COPY ./tools/start.sh .
 
 ENTRYPOINT ["./start.sh"]
+CMD ["mysqld", "--user=mysql", "--console"]

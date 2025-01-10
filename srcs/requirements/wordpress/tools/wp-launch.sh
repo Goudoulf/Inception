@@ -23,4 +23,3 @@ wp-cli.phar theme activate twentytwentyfour --allow-root
 
 fi
 
-php-fpm8.2 -F

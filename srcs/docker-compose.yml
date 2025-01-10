@@ -1,15 +1,15 @@
 services:
 
-  nginx:
+  inception-nginx:
     build:
       context: requirements/nginx/.
       dockerfile: Dockerfile
     image: "inception-nginx:webserv"
-    container_name: nginx
+    container_name: inception-nginx
     restart: always
     depends_on:
-      - mariadb
-      - wordpress
+      - inception-mariadb
+      - inception-wordpress
     ports:
       - "443:443"
     volumes:
@@ -17,17 +17,17 @@ services:
     networks:
       - inception-network
 
-  wordpress:
+  inception-wordpress:
     build:
       context: requirements/wordpress/.
       dockerfile: Dockerfile
     image: "inception-wordpress:website"
-    container_name: wp-php
+    container_name: inception-wordpress
     restart: always
     env_file:
       - .env
     depends_on:
-      - mariadb
+      - inception-mariadb
     healthcheck:
       test: ["CMD-SHELL", "mysqladmin ping --silent || exit 1"]
       interval: 10s
@@ -39,12 +39,12 @@ services:
     networks:
       - inception-network
 
-  mariadb:
+  inception-mariadb:
     build:
       context: requirements/mariadb/.
       dockerfile: Dockerfile
     image: "inception-mariadb:database"
-    container_name: mariadb
+    container_name: inception-mariadb
     restart: always
     env_file:
       - .env
@@ -53,31 +53,19 @@ services:
     networks:
       - inception-network
 
-  adminer:
+  inception-adminer:
     build:
       context: bonus/adminer/.
       dockerfile: Dockerfile
     image: "inception-adminer:adminer"
-    container_name: adminer
+    container_name: inception-adminer
     restart: always
     ports:
       - "8080:8080"
     depends_on:
-      - mariadb
+      - inception-mariadb
     networks:
       - inception-network
-ftpserver:
-    build: bonus/ftpserver/.
-    container_name: ftpserver
-    image: "inception-ftpserver:ftpserver"
-    restart: always
-    ports:
-      - "21:21"
-      - "21000-21010:21000-21010"
-    depends_on:
-      - wordpress
-    volumes:
-      - /home/cassie/data/wordpress:/var/www/html
     
 networks:
   inception-network:

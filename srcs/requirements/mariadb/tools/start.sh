@@ -7,17 +7,13 @@ IFS=$'\n\t'
 : "${MDB_USER:?Need to set MDB_USER}"
 : "${MDB_USER_PASSWORD:?Need to set MDB_USER_PASSWORD}"
 
-# Ensure mysqld run directory exists and set correct permissions
 mkdir -p /run/mysqld
 chown -R mysql:mysql /run/mysqld /var/lib/mysql
 
-# If no database is initialized, set it up
 if [ ! -d "/var/lib/mysql/mysql" ]; then
 
-    # Initialize the database directory
     mysql_install_db --basedir=/usr --datadir=/var/lib/mysql --user=mysql --rpm > /dev/null
 
-    # Run initial SQL statements to configure the database and users
     mysqld --user=mysql --bootstrap <<-EOSQL
         USE mysql;
         FLUSH PRIVILEGES;
@@ -37,8 +33,4 @@ if [ ! -d "/var/lib/mysql/mysql" ]; then
 EOSQL
 fi
 
-# Start MariaDB in the foreground
-
-echo "Starting MariaDB server..."
-exec mysqld --user=mysql --console
 
