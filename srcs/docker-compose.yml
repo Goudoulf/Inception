@@ -8,8 +8,9 @@ services:
     container_name: inception-nginx
     restart: always
     depends_on:
-      - inception-mariadb
-      - inception-wordpress
+      inception-wordpress:
+        condition: service_started
+        restart: true
     ports:
       - "443:443"
     volumes:
@@ -27,13 +28,9 @@ services:
     env_file:
       - .env
     depends_on:
-      - inception-mariadb
-    healthcheck:
-      test: ["CMD-SHELL", "mysqladmin ping --silent || exit 1"]
-      interval: 10s
-      timeout: 5s
-      retries: 3
-      start_period: 30s
+      inception-mariadb:
+        condition: service_healthy
+        restart: true
     volumes:
       - /home/cassie/data/wordpress:/var/www/html
     networks:
@@ -45,6 +42,12 @@ services:
       dockerfile: Dockerfile
     image: "inception-mariadb:database"
     container_name: inception-mariadb
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping --silent || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
     restart: always
     env_file:
       - .env
@@ -63,10 +66,22 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      - inception-mariadb
+      inception-mariadb:
+        condition: service_healthy
+        restart: true
     networks:
       - inception-network
     
+  inception-website:
+    build:
+      context: bonus/website/.
+      dockerfile: Dockerfile
+    image: "inception-website:website"
+    container_name: inception-website
+    restart: always
+    ports:
+      - "8081:80"
+
 networks:
   inception-network:
 

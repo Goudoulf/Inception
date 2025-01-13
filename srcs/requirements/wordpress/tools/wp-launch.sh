@@ -23,3 +23,4 @@ wp-cli.phar theme activate twentytwentyfour --allow-root
 
 fi
 
+exec "$@"

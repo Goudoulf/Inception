@@ -1,4 +1,4 @@
-FROM debian@sha256:cd73f5c112f19fac6d67b49d8982104fcf9c14b4ad69c2658fab8702f61b4430
+FROM debian@sha256:e83913597ca9deb9d699316a9a9d806c2a87ed61195ac66ae0a8ac55089a84b9
 
 RUN apt-get update && apt-get install -y \
     php-fpm \
@@ -27,6 +27,6 @@ COPY ./tools/wp-launch.sh .
 RUN chmod +x wp-launch.sh
 
 ENTRYPOINT ["./wp-launch.sh"]
-CMD ["php-fpm8.2", "-F"]
+CMD ["/usr/sbin/php-fpm8.2", "-F"]
 
 

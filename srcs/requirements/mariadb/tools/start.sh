@@ -33,4 +33,4 @@ if [ ! -d "/var/lib/mysql/mysql" ]; then
 EOSQL
 fi
 
-
+exec "$@"
