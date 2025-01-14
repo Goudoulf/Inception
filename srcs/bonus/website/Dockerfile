@@ -7,4 +7,3 @@ RUN apt-get update && \
 COPY . /var/www/html/
 
 CMD ["lighttpd", "-D", "-f", "/etc/lighttpd/lighttpd.conf"]
-
